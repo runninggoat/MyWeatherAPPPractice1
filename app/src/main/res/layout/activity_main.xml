@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.myweather.gjj.myweather.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--upper grid layout-->
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/refresh_label"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <Button
+                android:id="@+id/clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/clear_label"
+                app:layout_constraintRight_toLeftOf="@id/refresh"/>
+
+            <TextView
+                android:id="@+id/city_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/city_label"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
+                android:id="@+id/city_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广州"
+                app:layout_constraintLeft_toRightOf="@id/city_label"/>
+
+            <TextView
+                android:id="@+id/weather_info_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/weather_info_label"
+                app:layout_constraintTop_toBottomOf="@id/city_label"/>
+
+            <TextView
+                android:id="@+id/date_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_label"
+                app:layout_constraintTop_toBottomOf="@id/weather_info_label"/>
+
+            <TextView
+                android:id="@+id/date_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2017年1月1日"
+                app:layout_constraintLeft_toRightOf="@id/date_label"
+                app:layout_constraintTop_toBottomOf="@id/weather_info_label"/>
+
+            <TextView
+                android:id="@+id/temperature_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/temperature_label"
+                app:layout_constraintTop_toBottomOf="@id/weather_info_label"
+                app:layout_constraintLeft_toRightOf="@id/date_value"/>
+
+            <TextView
+                android:id="@+id/temperature_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25℃"
+                app:layout_constraintLeft_toRightOf="@id/temperature_label"
+                app:layout_constraintTop_toBottomOf="@id/weather_info_label"/>
+
+            <TextView
+                android:id="@+id/humidity_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/humidity_label"
+                app:layout_constraintTop_toBottomOf="@id/weather_info_label"
+                app:layout_constraintLeft_toRightOf="@id/temperature_value"/>
+
+            <TextView
+                android:id="@+id/humidity_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="80%"
+                app:layout_constraintLeft_toRightOf="@id/humidity_label"
+                app:layout_constraintTop_toBottomOf="@id/weather_info_label"/>
+
+            <TextView
+                android:id="@+id/pm25_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pm25_label"
+                app:layout_constraintTop_toBottomOf="@id/date_label"
+                app:layout_constraintLeft_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/pm25_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16"
+                app:layout_constraintLeft_toRightOf="@id/pm25_label"
+                app:layout_constraintTop_toBottomOf="@id/date_label"/>
+
+            <TextView
+                android:id="@+id/pm10_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pm10_label"
+                app:layout_constraintTop_toBottomOf="@id/date_label"
+                app:layout_constraintLeft_toRightOf="@id/pm25_value"/>
+
+            <TextView
+                android:id="@+id/pm10_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16"
+                app:layout_constraintLeft_toRightOf="@id/pm10_label"
+                app:layout_constraintTop_toBottomOf="@id/date_label"/>
+
+            <TextView
+                android:id="@+id/air_quality_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/air_quality_label"
+                app:layout_constraintTop_toBottomOf="@id/date_label"
+                app:layout_constraintLeft_toRightOf="@id/pm10_value"/>
+
+            <TextView
+                android:id="@+id/air_quality_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="良"
+                app:layout_constraintLeft_toRightOf="@id/air_quality_label"
+                app:layout_constraintTop_toBottomOf="@id/date_label"/>
+
+            <TextView
+                android:id="@+id/suggest_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/suggest_label"
+                app:layout_constraintTop_toBottomOf="@id/air_quality_label"
+                app:layout_constraintLeft_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/suggest_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="给出对应天气的建议"
+                app:layout_constraintLeft_toRightOf="@id/suggest_label"
+                app:layout_constraintTop_toBottomOf="@id/air_quality_label"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"                      android:text="@string/temperature_chat_title"
+                android:textSize="20sp"
+                android:padding="5sp"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/temperature_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/suggest_label"
+                android:padding="5sp"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="数据来源：http://www.sojson.com"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!--<TextView-->
+        <!--android:id="@+id/hello_world"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text=""-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/test_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="test button"-->
+        <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/insert_item1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="insert item 1"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/test_button"/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/query_item1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="query item 1"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/insert_item1"/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/clear_data"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="clear data"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/query_item1"/>-->
+
+    <!--<com.github.mikephil.charting.charts.LineChart-->
+        <!--android:id="@+id/line_chart1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300sp"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/hello_world"/>-->
+
+</android.support.constraint.ConstraintLayout>

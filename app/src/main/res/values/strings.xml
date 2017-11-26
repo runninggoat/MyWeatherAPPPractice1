@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">MyWeather</string>
+    <string name="city_label">城市：</string>
+    <string name="refresh_label">刷新</string>
+    <string name="clear_label">清除缓存</string>
+    <string name="weather_info_label">~~~~~天气信息~~~~~</string>
+    <string name="today_label">今天：</string>
+    <string name="date_label">日期：</string>
+    <string name="humidity_label">；湿度：</string>
+    <string name="pm25_label">PM2.5：</string>
+    <string name="pm10_label">；PM10：</string>
+    <string name="air_quality_label">；空气质量：</string>
+    <string name="temperature_label">；温度：</string>
+    <string name="suggest_label">建议：</string>
+    <string name="sunrise_label">日出：</string>
+    <string name="high_label">高温：</string>
+    <string name="low_label">低温：</string>
+    <string name="sunset_label">日落：</string>
+    <string name="aqi_label">AQI指数：</string>
+    <string name="wind_dirrection_label">风向：</string>
+    <string name="wind_level_label">风速等级：</string>
+    <string name="weather_type_label">天气情况：</string>
+    <string name="temperature_chat_title">气温变化</string>
+</resources>
