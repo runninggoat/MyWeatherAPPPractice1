@@ -3,6 +3,8 @@ package com.myweather.gjj.myweather;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -38,11 +40,15 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
+    private Context context = this;
+
     private ContentResolver contentResolver = null;
-    private final Uri uri = Uri.parse("content://weather_forcast/weather_forcast");
+    private final Uri weatherContentUri = Uri.parse("content://weather_forcast/weather_forcast");
+    private final Uri settingsUri = Uri.parse("content://app_settings/app_settings");
 
     private Button refreshButton = null;
     private Button clearButton = null;
+    private Button settingsButton = null;
 
     private TextView cityValue = null;
     private TextView dateValue = null;
@@ -68,14 +74,14 @@ public class MainActivity extends Activity {
                 ContentValues values = new ContentValues();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
                 String today = df.format(new Date());
-                values.put(Settings.START_DATE, today);
-                values.put(Settings.CITY, city);
-                values.put(Settings.JSON, jsonStr);
-                values.put(Settings.STATE, "200");
-                values.put(Settings.URL, strings[0]);
-                values.put(Settings.MEMO, "");
+                values.put(StaticValues.START_DATE, today);
+                values.put(StaticValues.CITY, city);
+                values.put(StaticValues.JSON, jsonStr);
+                values.put(StaticValues.STATE, "200");
+                values.put(StaticValues.URL, strings[0]);
+                values.put(StaticValues.MEMO, "");
                 Log.d(TAG, "insert this weather information");
-                contentResolver.insert(uri, values);
+                contentResolver.insert(weatherContentUri, values);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,19 +104,30 @@ public class MainActivity extends Activity {
     }
 
     private void doRefresh() {
+        //get city from settings provider
+        String[] columns = new String[]{StaticValues.KEY, StaticValues.VALUE};
+        Cursor cursor = contentResolver.query(settingsUri, columns, "key=?", new String[]{"city"}, null);
+        if (cursor.moveToFirst()) {
+            city = cursor.getString(cursor.getColumnIndex(StaticValues.VALUE));
+        } else {
+            Log.d(TAG, "no cached previous selected city! use default city 广州.");
+            city = "广州";
+        }
+
+        //refresh
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         String today = df.format(new Date());
-        String columns[] = new String[] { Settings.SID, Settings.START_DATE, Settings.CITY, Settings.JSON, Settings.STATE, Settings.URL, Settings.MEMO};
-        Cursor cursor = contentResolver.query(uri, columns, "city=? and start_date=?", new String[]{city, today},null);
+        columns = new String[] { StaticValues.SID, StaticValues.START_DATE, StaticValues.CITY, StaticValues.JSON, StaticValues.STATE, StaticValues.URL, StaticValues.MEMO};
+        cursor = contentResolver.query(weatherContentUri, columns, "city=? and start_date=?", new String[]{city, today},null);
         boolean cached = false;
         if (cursor.moveToFirst()) {
             Log.d(TAG, String.format("%s %s weather information cached!", city, today));
             cached = true;
-            String jsonStr = cursor.getString(cursor.getColumnIndex(Settings.JSON));
+            String jsonStr = cursor.getString(cursor.getColumnIndex(StaticValues.JSON));
             JsonInfo jsonInfo = Util.parseStr(jsonStr);
             Log.d(TAG, java.lang.String.format("parse string: %s", jsonInfo.toString()));
             if (jsonInfo.getDate() == null) {
-                contentResolver.delete(uri, "city=? and start_date=?", new String[]{city, today});
+                contentResolver.delete(weatherContentUri, "city=? and start_date=?", new String[]{city, today});
                 Toast.makeText(this, "Invalid data, delete it! Refresh later.", Toast.LENGTH_LONG);
             } else {
                 updateDisplayData(jsonInfo);
@@ -125,6 +142,9 @@ public class MainActivity extends Activity {
     }
 
     private void updateDisplayData(JsonInfo jsonInfo) {
+        if (jsonInfo.getCity().equals(null)) {
+            return;
+        }
         cityValue.setText(jsonInfo.getCity());
         dateValue.setText(dateFormatter(jsonInfo.getDate()));
         temperatureValue.setText(jsonInfo.getData().getWendu());
@@ -187,7 +207,8 @@ public class MainActivity extends Activity {
     }
 
     private String extractTemperature(String tempStr) {
-        return tempStr.substring(3, 7);
+        String temp = tempStr.substring(3);
+        return temp.substring(0, temp.length() - 1);
     }
 
     @Override
@@ -215,7 +236,7 @@ public class MainActivity extends Activity {
                 Log.i(TAG, "clear button clicked!");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
                 String today = df.format(new Date());
-                contentResolver.delete(uri, "city=? and start_date=?", new String[]{city, today});
+                contentResolver.delete(weatherContentUri, "city=? and start_date=?", new String[]{city, today});
                 Log.i(TAG, String.format("clear info of city: %s, date: %s", city, today));
             }
         });
@@ -229,8 +250,25 @@ public class MainActivity extends Activity {
             }
         });
 
+        settingsButton = findViewById(R.id.settings);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "settings button clicked!");
+                Intent intent = new Intent();
+                intent.setClass(context, SettingsActivity.class);
+                context.startActivity(intent);
+            }
+        });
+
         doRefresh();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        doRefresh();
     }
 
     private class DateXAxisValueFormatter implements IAxisValueFormatter {

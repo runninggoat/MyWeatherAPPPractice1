@@ -31,6 +31,13 @@
                 android:text="@string/clear_label"
                 app:layout_constraintRight_toLeftOf="@id/refresh"/>
 
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_label"
+                app:layout_constraintRight_toLeftOf="@id/clear"/>
+
             <TextView
                 android:id="@+id/city_label"
                 android:layout_width="wrap_content"

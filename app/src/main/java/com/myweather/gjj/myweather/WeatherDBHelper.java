@@ -20,15 +20,15 @@ public class WeatherDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d(TAG, "onCreate database...");
-        sqLiteDatabase.execSQL(Settings.CREATE_DB_SQL);
+        Log.d(TAG, "onCreate weather content database...");
+        sqLiteDatabase.execSQL(StaticValues.CREATE_WEATHER_CONTENT_DB_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase,
                           int i, int i1) {
-        Log.d(TAG, "onUpgrade database...");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Settings.TABLE_NAME);
+        Log.d(TAG, "onUpgrade weather content database...");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + StaticValues.WEATHER_CONTENT_TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

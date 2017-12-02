@@ -3,6 +3,7 @@
     <string name="city_label">城市：</string>
     <string name="refresh_label">刷新</string>
     <string name="clear_label">清除缓存</string>
+    <string name="settings_label">设置</string>
     <string name="weather_info_label">~~~~~天气信息~~~~~</string>
     <string name="today_label">今天：</string>
     <string name="date_label">日期：</string>
@@ -21,4 +22,6 @@
     <string name="wind_level_label">风速等级：</string>
     <string name="weather_type_label">天气情况：</string>
     <string name="temperature_chat_title">气温变化</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="selected_city">已选城市：</string>
 </resources>

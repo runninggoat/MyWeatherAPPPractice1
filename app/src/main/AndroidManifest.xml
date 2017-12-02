@@ -24,6 +24,18 @@
             android:exported="true"
             android:multiprocess="false">
         </provider>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light">
+        </activity>
+
+        <provider
+            android:name=".SettingsContentProvider"
+            android:authorities="app_settings"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>

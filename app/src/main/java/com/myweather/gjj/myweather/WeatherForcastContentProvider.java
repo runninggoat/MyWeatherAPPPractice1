@@ -20,13 +20,13 @@ public class WeatherForcastContentProvider extends ContentProvider {
 
     private static HashMap<String, String> fieldMap = new HashMap<>();
     static {
-        fieldMap.put(Settings.SID, Settings.SID);
-        fieldMap.put(Settings.START_DATE, Settings.START_DATE);
-        fieldMap.put(Settings.CITY, Settings.CITY);
-        fieldMap.put(Settings.JSON, Settings.JSON);
-        fieldMap.put(Settings.STATE, Settings.STATE);
-        fieldMap.put(Settings.URL, Settings.URL);
-        fieldMap.put(Settings.MEMO, Settings.MEMO);
+        fieldMap.put(StaticValues.SID, StaticValues.SID);
+        fieldMap.put(StaticValues.START_DATE, StaticValues.START_DATE);
+        fieldMap.put(StaticValues.CITY, StaticValues.CITY);
+        fieldMap.put(StaticValues.JSON, StaticValues.JSON);
+        fieldMap.put(StaticValues.STATE, StaticValues.STATE);
+        fieldMap.put(StaticValues.URL, StaticValues.URL);
+        fieldMap.put(StaticValues.MEMO, StaticValues.MEMO);
     }
 
     public WeatherForcastContentProvider() {
@@ -36,19 +36,19 @@ public class WeatherForcastContentProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         Log.i(TAG, "weather provider delete");
         sqLiteDatabase = weatherDBHelper.getWritableDatabase();
-        return sqLiteDatabase.delete(Settings.TABLE_NAME, selection, selectionArgs);
+        return sqLiteDatabase.delete(StaticValues.WEATHER_CONTENT_TABLE_NAME, selection, selectionArgs);
     }
 
     @Override
     public String getType(Uri uri) {
-        return Settings.TABLE_NAME;
+        return StaticValues.WEATHER_CONTENT_TABLE_NAME;
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Log.i(TAG, "weather provider insert");
         sqLiteDatabase = weatherDBHelper.getWritableDatabase();
-        long id = sqLiteDatabase.insert(Settings.TABLE_NAME, Settings.SID, values);
+        long id = sqLiteDatabase.insert(StaticValues.WEATHER_CONTENT_TABLE_NAME, StaticValues.SID, values);
         if(id < 0) {
             throw new SQLiteException("Unable to insert " + values + " for " + uri);
         }
@@ -58,7 +58,7 @@ public class WeatherForcastContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        weatherDBHelper = new WeatherDBHelper(getContext(), Settings.TABLE_NAME, null, 1);
+        weatherDBHelper = new WeatherDBHelper(getContext(), StaticValues.WEATHER_CONTENT_TABLE_NAME, null, 1);
         Log.i(TAG, "Weather provider created.");
         return true;
     }
@@ -69,7 +69,7 @@ public class WeatherForcastContentProvider extends ContentProvider {
         Log.i(TAG, "weather provider query");
         sqLiteDatabase = weatherDBHelper.getReadableDatabase();
         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
-        sqLiteQueryBuilder.setTables(Settings.TABLE_NAME);
+        sqLiteQueryBuilder.setTables(StaticValues.WEATHER_CONTENT_TABLE_NAME);
         sqLiteQueryBuilder.setProjectionMap(fieldMap);
         Cursor cursor = sqLiteQueryBuilder.query(sqLiteDatabase, projection, selection, selectionArgs, null, null, sortOrder);
         return cursor;
@@ -82,7 +82,7 @@ public class WeatherForcastContentProvider extends ContentProvider {
         Log.i(TAG, "weather provider update");
         sqLiteDatabase = weatherDBHelper.getWritableDatabase();
         int count = 0;
-        count = sqLiteDatabase.update(Settings.TABLE_NAME, values, selection, selectionArgs);
+        count = sqLiteDatabase.update(StaticValues.WEATHER_CONTENT_TABLE_NAME, values, selection, selectionArgs);
         return count;
     }
 }
