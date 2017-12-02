@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.myweather.gjj.myweather.models.CityName;
 
@@ -57,6 +58,8 @@ public class SettingsActivity extends AppCompatActivity {
                 values.put(StaticValues.VALUE, cityName.getCity());
                 int affected = contentResolver.update(uri, values, "key=?", new String[] {"city"});
                 readFromSettingsDBUpdateSelectedCity();
+                Toast.makeText(getApplicationContext(), "Select city: " + cityName, Toast.LENGTH_LONG);
+                hideSettingActivity();
             }
         });
     }
@@ -82,5 +85,9 @@ public class SettingsActivity extends AppCompatActivity {
             values.put(StaticValues.VALUE, "广州");
             contentResolver.insert(uri, values);
         }
+    }
+
+    private void hideSettingActivity() {
+        this.finish();
     }
 }

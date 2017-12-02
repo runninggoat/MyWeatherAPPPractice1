@@ -71,6 +71,8 @@ public class MainActivity extends Activity {
                 Log.d(TAG, String.format("request get: %s", jsonStr));
                 jsonInfo = Util.parseStr(jsonStr);
                 Log.d(TAG, String.format("parse string: %s", jsonInfo.toString()));
+                if (jsonInfo.getCity() == null)
+                    return null;
                 ContentValues values = new ContentValues();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
                 String today = df.format(new Date());
@@ -90,7 +92,11 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(JsonInfo jsonInfo) {
-            updateDisplayData(jsonInfo);
+            if (jsonInfo != null)
+                updateDisplayData(jsonInfo);
+            else
+                Log.e(TAG, "Response json data is not correct! Do nothing!");
+                Toast.makeText(context, "Incorrect Response!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -128,10 +134,10 @@ public class MainActivity extends Activity {
             Log.d(TAG, java.lang.String.format("parse string: %s", jsonInfo.toString()));
             if (jsonInfo.getDate() == null) {
                 contentResolver.delete(weatherContentUri, "city=? and start_date=?", new String[]{city, today});
-                Toast.makeText(this, "Invalid data, delete it! Refresh later.", Toast.LENGTH_LONG);
+                Toast.makeText(context, "Invalid data, delete it! Refresh later.", Toast.LENGTH_LONG).show();
             } else {
                 updateDisplayData(jsonInfo);
-                Toast.makeText(this, "数据刷新", Toast.LENGTH_LONG);
+                Toast.makeText(context, "数据已缓存", Toast.LENGTH_LONG).show();
             }
         }
         if (cached == false) {
@@ -142,7 +148,7 @@ public class MainActivity extends Activity {
     }
 
     private void updateDisplayData(JsonInfo jsonInfo) {
-        if (jsonInfo.getCity().equals(null)) {
+        if (jsonInfo == null) {
             return;
         }
         cityValue.setText(jsonInfo.getCity());
@@ -261,13 +267,13 @@ public class MainActivity extends Activity {
             }
         });
 
-        doRefresh();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "On main activity start, do refresh operation.");
+//        Toast.makeText(context, "On main activity start.", Toast.LENGTH_LONG).show();
         doRefresh();
     }
 
