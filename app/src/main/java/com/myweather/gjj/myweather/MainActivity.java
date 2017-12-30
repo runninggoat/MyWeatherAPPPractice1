@@ -67,10 +67,12 @@ public class MainActivity extends Activity {
         protected JsonInfo doInBackground(String... strings) {
             JsonInfo jsonInfo = null;
             try {
+                //这里访问网络
                 String jsonStr = Util.getAPI(strings[0]);
                 Log.d(TAG, String.format("request get: %s", jsonStr));
                 jsonInfo = Util.parseStr(jsonStr);
                 Log.d(TAG, String.format("parse string: %s", jsonInfo.toString()));
+                //这里决定访问网络得到的数据是否有用，就是是否有城市信息这个值
                 if (jsonInfo.getCity() == null)
                     return null;
                 ContentValues values = new ContentValues();
@@ -92,11 +94,13 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(JsonInfo jsonInfo) {
+            //访问网络结束，如果有数据则更新，否则等待下一次的网络访问
             if (jsonInfo != null)
                 updateDisplayData(jsonInfo);
-            else
+            else {
                 Log.e(TAG, "Response json data is not correct! Do nothing!");
                 Toast.makeText(context, "Incorrect Response!", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -109,8 +113,12 @@ public class MainActivity extends Activity {
         return year + "年" + month + "月" + day + "日";
     }
 
+    /**
+     * 进行刷新数据的操作
+     */
     private void doRefresh() {
         //get city from settings provider
+        //先从setting中获取已经设置的城市信息，如果第一次使用软件没有设置过的话默认广州
         String[] columns = new String[]{StaticValues.KEY, StaticValues.VALUE};
         Cursor cursor = contentResolver.query(settingsUri, columns, "key=?", new String[]{"city"}, null);
         if (cursor.moveToFirst()) {
@@ -123,12 +131,15 @@ public class MainActivity extends Activity {
         //refresh
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         String today = df.format(new Date());
+        //需要查询出来的列信息
         columns = new String[] { StaticValues.SID, StaticValues.START_DATE, StaticValues.CITY, StaticValues.JSON, StaticValues.STATE, StaticValues.URL, StaticValues.MEMO};
+        //通过查询获得数据集的游标
         cursor = contentResolver.query(weatherContentUri, columns, "city=? and start_date=?", new String[]{city, today},null);
         boolean cached = false;
         if (cursor.moveToFirst()) {
             Log.d(TAG, String.format("%s %s weather information cached!", city, today));
             cached = true;
+            //将查询所得数据转换成复杂数据结构，用于后续更新数据
             String jsonStr = cursor.getString(cursor.getColumnIndex(StaticValues.JSON));
             JsonInfo jsonInfo = Util.parseStr(jsonStr);
             Log.d(TAG, java.lang.String.format("parse string: %s", jsonInfo.toString()));
@@ -140,6 +151,7 @@ public class MainActivity extends Activity {
                 Toast.makeText(context, "数据已缓存", Toast.LENGTH_LONG).show();
             }
         }
+        //未缓存数据的话就访问网络获取数据
         if (cached == false) {
             refreshTask = new RefreshTask();
 //            refreshTask.execute("http://192.168.123.172/get_weather");
@@ -147,6 +159,10 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * 更新显示的数据
+     * @param jsonInfo 更新数据和画图所需要的数据保存的数据结构的变量
+     */
     private void updateDisplayData(JsonInfo jsonInfo) {
         if (jsonInfo == null) {
             return;
@@ -162,6 +178,16 @@ public class MainActivity extends Activity {
         updateChatData(jsonInfo);
     }
 
+    /**
+     * 更新数据表格的方法，写得比较臃肿
+     * 1、先将x, y数据对保存在Entry中
+     * 2、将Entry放到DataSet中，DataSet可以设置样式
+     * 3、强DataSet放到LineData中，LineData可以添加多个DataSet
+     * 4、chart利用setData的方法设置数据
+     * 5、数据轴设置格式
+     * 6、chart调用invalidate方法绘图
+     * @param jsonInfo 画图需要的数据所保存的数据结构的变量
+     */
     private void updateChatData(JsonInfo jsonInfo) {
         List<Entry> highEntries = new ArrayList<>();
         List<Entry> lowEntries = new ArrayList<>();
@@ -170,6 +196,7 @@ public class MainActivity extends Activity {
         float minTemp = 50f;
         float dayHighTemp = Float.valueOf(extractTemperature(jsonInfo.getData().getYesterday().getHigh()));
         float dayLowTemp = Float.valueOf(extractTemperature(jsonInfo.getData().getYesterday().getLow()));
+        //1、
         highEntries.add(new Entry(count, dayHighTemp));
         lowEntries.add(new Entry(count, dayLowTemp));
         maxTemp = maxTemp > dayHighTemp ? maxTemp : dayHighTemp;
@@ -183,6 +210,7 @@ public class MainActivity extends Activity {
             maxTemp = maxTemp > dayHighTemp ? maxTemp : dayHighTemp;
             minTemp = minTemp < dayLowTemp ? minTemp : dayLowTemp;
         }
+        //2、
         LineDataSet highDataSet = new LineDataSet(highEntries, "最高温度");
         LineDataSet lowDataSet = new LineDataSet(lowEntries, "最低温度");
         highDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -191,10 +219,13 @@ public class MainActivity extends Activity {
         lowDataSet.setColor(Color.BLUE);
         highDataSet.setValueTextSize(14f);
         lowDataSet.setValueTextSize(14f);
+        //3、
         LineData lineData = new LineData();
         lineData.addDataSet(highDataSet);
         lineData.addDataSet(lowDataSet);
+        //4、
         temperatureChart.setData(lineData);
+        //5、
         XAxis xAxis = temperatureChart.getXAxis();
         xAxis.setAxisMaximum(count + 1);
         xAxis.setAxisMinimum(0f);
@@ -209,6 +240,7 @@ public class MainActivity extends Activity {
 
         Legend legend = temperatureChart.getLegend();
         legend.setTextSize(14f);
+        //6、
         temperatureChart.invalidate();
     }
 
@@ -225,6 +257,7 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        //这些是表格上方需要显示的值
         cityValue = findViewById(R.id.city_value);
         dateValue = findViewById(R.id.date_value);
         temperatureValue = findViewById(R.id.temperature_value);
@@ -235,6 +268,7 @@ public class MainActivity extends Activity {
         suggestValue = findViewById(R.id.suggest_value);
         temperatureChart = findViewById(R.id.temperature_chart);
 
+        //清除按钮以及点击监听器，清除时使用查询删除相应的记录
         clearButton = findViewById(R.id.clear);
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,6 +281,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //刷新按钮，调用刷新的方法
         refreshButton = findViewById(R.id.refresh);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,6 +304,9 @@ public class MainActivity extends Activity {
 
     }
 
+    /**
+     * MainActivity在展示之前会调用这个方法，做一次刷新
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -277,6 +315,9 @@ public class MainActivity extends Activity {
         doRefresh();
     }
 
+    /**
+     * 内部类，规定表格X轴的值的格式化方式
+     */
     private class DateXAxisValueFormatter implements IAxisValueFormatter {
 
         @Override

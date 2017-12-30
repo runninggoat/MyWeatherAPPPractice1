@@ -44,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
         for (String city : cities)
             cityList.add(new CityName(city));
 
+        //这里是设置界面中的城市的列表，通过Adaptor实现
         cityListView = findViewById(R.id.city_list);
 
         CityNameAdapter cityNameAdapter = new CityNameAdapter(this, R.layout.city_list_layout, cityList);
@@ -71,6 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
         readFromSettingsDBUpdateSelectedCity();
     }
 
+    /**
+     * 从数据表中读取城市设置，并设置显示“已经城市”为当前选择的城市名称
+     */
     private void readFromSettingsDBUpdateSelectedCity() {
         String columns[] = new String[] {StaticValues.KEY, StaticValues.VALUE};
         Cursor cursor = contentResolver.query(uri, columns, "key=?", new String[]{"city"},null);

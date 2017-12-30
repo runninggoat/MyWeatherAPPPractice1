@@ -18,6 +18,7 @@ public class SettingsContentProvider extends ContentProvider {
     private SQLiteDatabase sqLiteDatabase;
     private SettingsDBHelper settingsDBHelper;
 
+    //定义设置数据表中的两列列名信息
     private static HashMap<String, String> fieldMap = new HashMap<>();
     static {
         fieldMap.put(StaticValues.KEY, StaticValues.KEY);
